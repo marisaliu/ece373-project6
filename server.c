@@ -6,30 +6,33 @@
 #include <string.h>
 #include <stdio.h>
 int maxClients = 0;
-int clientIndex = 0;
+int numClients = 0;
+char userArr[50][21];   //creates an array of 50 users with max username length of 20 character
+	 char ipArr[50][21];
 void *thread(void *vargp);
 
 char * parseUser(char * in){
   return (strtok(in, ' ') + 1);
 }
 
-void echo(int connfd)
+void chat(int connfd)
 {
-  int n;
+	int index = 0;
   char buf[MAXLINE];
 	char* toUser;
   rio_t rio;
-	Rio_readlineb(&rio, buf, MAXLINE)
-	while(userArr[index] != NULL){
+	Rio_readlineb(&rio, buf, MAXLINE);
+	if(strlen(buf) != 0){
+	while((userArr[index] != NULL) && (strcmp(userArr[index], " ") != 0)){
 		index++;
 	}
-	userArr[index] = buf; 
-	ipArr[index] = connfd;
+	strcpy(userArr[index], buf); 
+	strcpy(ipArr[index], connfd);
   Rio_readinitb(&rio, connfd);
 	while(1){
-		Rio_readlineb(&rio, buf, MAXLINE)
-		toUser = parseUser(buf)
-		if(strcmp(toUser, ERROR)){
+		Rio_readlineb(&rio, buf, MAXLINE);
+		toUser = parseUser(buf);
+		if(strcmp(toUser,"ERROR")){
 			strcpy(buf, "ERROR! NO USER OF THAT NAME!	Please enter a valid user");
 			rio_writen(connfd, buf, strlen(buf));
 		}
@@ -40,17 +43,20 @@ void echo(int connfd)
 				i = (i+1)%50;
 			}
 			if(strcmp(message, "quit") == 0) break;
-			if(strcmp(message, "list-users" == 0)){
+			else if(strcmp(message, "list-users") == 0){
 				for(int j = 0; j < 50; j++){
-					if(userArr[j] != NULL) rio_written(connfd, userArr[j], strlen(userArr[j]);
+					if(userArr[j] != NULL) rio_writen(connfd, userArr[j], strlen(userArr[j]));
 				}
 			}
 			rio_writen(ipArr[i], message, strlen(message));
-
 		}
-
-
+		}
 	}
+	strcpy(userArr[index], " " );
+	strcpy(ipArr[index], " " );
+	numClients--;
+
+
 //  while((n = Rio_readlineb(&rio, buf, MAXLINE)) != 0) {
   //      printf("server received %d bytes\n", n);
    //     Rio_writen(connfd, buf, n);
@@ -59,8 +65,6 @@ void echo(int connfd)
 
 int main(int argc, char **argv) 
 {
-   char userArr[50][21];   //creates an array of 50 users with max username length of 20 character
-	 char ipArr[50][21];
 	 int listenfd, *connfdp;
     socklen_t clientlen;
     struct sockaddr_storage clientaddr;
@@ -78,7 +82,7 @@ int main(int argc, char **argv)
 			*connfdp = Accept(listenfd, (SA *) &clientaddr, &clientlen); //line:conc:echoservert:endmalloc
 			if((numClients +1) >= maxClients){
 				printf("MAX CLIENTS REACHED \n");
-				close(connfd);
+				close(connfdp);
 			}
 
 			Pthread_create(&tid, NULL, thread, connfdp);
@@ -91,7 +95,7 @@ void *thread(void *vargp)
     int connfd = *((int *)vargp);
     Pthread_detach(pthread_self()); //line:conc:echoservert:detach
     Free(vargp);                    //line:conc:echoservert:free
-    echo(connfd);
+    chat(connfd);
     Close(connfd);
     return NULL;
 }
