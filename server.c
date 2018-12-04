@@ -9,6 +9,10 @@ int maxClients = 0;
 int clientIndex = 0;
 void *thread(void *vargp);
 
+char * parseUser(char * in){
+  return (strtok(in, ' ') + 1);
+}
+
 void echo(int connfd)
 {
   int n;
