@@ -5,10 +5,10 @@
 #include "csapp.h"
 #include <string.h>
 #include <stdio.h>
-int maxClients = 0;
+int maxClients = 50;
 int numClients = 0;
 char userArr[50][21];   //creates an array of 50 users with max username length of 20 character
-	 char ipArr[50][21];
+	 int ipArr[50];
 void *thread(void *vargp);
 
 char * parseUser(char * in){
@@ -21,17 +21,19 @@ void chat(int connfd)
   char buf[MAXLINE];
 	char* toUser;
   rio_t rio;
-	Rio_readlineb(&rio, buf, MAXLINE);
+	Rio_readinitb(&rio, connfd);
+  Rio_readlineb(&rio, buf, MAXLINE);
+	printf("Init User: %s\n", buf);
 	if(strlen(buf) != 0){
 	while((userArr[index] != NULL) && (strcmp(userArr[index], " ") != 0)){
 		index++;
 	}
 	strcpy(userArr[index], buf); 
-	strcpy(ipArr[index], connfd);
-  Rio_readinitb(&rio, connfd);
+	ipArr[index] = connfd;
 	while(1){
 		Rio_readlineb(&rio, buf, MAXLINE);
 		toUser = parseUser(buf);
+		printf("User: %s\n", toUser);
 		if(strcmp(toUser,"ERROR")){
 			strcpy(buf, "ERROR! NO USER OF THAT NAME!	Please enter a valid user");
 			rio_writen(connfd, buf, strlen(buf));
@@ -53,7 +55,7 @@ void chat(int connfd)
 		}
 	}
 	strcpy(userArr[index], " " );
-	strcpy(ipArr[index], " " );
+	ipArr[index] = 0;
 	numClients--;
 
 
@@ -82,7 +84,8 @@ int main(int argc, char **argv)
 			*connfdp = Accept(listenfd, (SA *) &clientaddr, &clientlen); //line:conc:echoservert:endmalloc
 			if((numClients +1) >= maxClients){
 				printf("MAX CLIENTS REACHED \n");
-				close(connfdp);
+				int connfd = *((int *)connfdp);
+				close(connfd);
 			}
 
 			Pthread_create(&tid, NULL, thread, connfdp);
