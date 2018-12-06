@@ -44,7 +44,7 @@ void chat(int connfd)
 		Rio_readlineb(&rio, buf, 101);
 //		printf("buf: %s\n", buf);
 		toUser = parseUser(buf);
-		printf("User: %s\n", toUser);
+		printf("@%s joined \n", toUser);
 		if(strcmp(toUser,"ERROR")){
 			strcpy(buf, "ERROR! NO USER OF THAT NAME!	Please enter a valid user");
 			rio_writen(connfd, buf, strlen(buf));
