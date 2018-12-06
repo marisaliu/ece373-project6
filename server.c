@@ -12,7 +12,15 @@ char userArr[50][21];   //creates an array of 50 users with max username length 
 void *thread(void *vargp);
 
 char * parseUser(char * in){
-  return (strtok(in, ' ') + 1);
+  char *out = strtok(in," ") + 1;
+	for(int i=0; i<51; i++){
+		if(i == 50){
+			strcpy(out, "ERROR");
+			break;
+		}
+		if(strcmp(out, userArr[i])) break;
+	}
+	return out;
 }
 
 void chat(int connfd)
@@ -22,8 +30,9 @@ void chat(int connfd)
 	char* toUser;
   rio_t rio;
 	Rio_readinitb(&rio, connfd);
-  Rio_readlineb(&rio, buf, MAXLINE);
+  Rio_readlineb(&rio, buf, 21);
 	printf("Init User: %s\n", buf);
+	fflush(stdout);
 	if(strlen(buf) != 0){
 	while((userArr[index] != NULL) && (strcmp(userArr[index], " ") != 0)){
 		index++;
@@ -32,6 +41,7 @@ void chat(int connfd)
 	ipArr[index] = connfd;
 	while(1){
 		Rio_readlineb(&rio, buf, MAXLINE);
+		printf("buf: %s\n", buf);
 		toUser = parseUser(buf);
 		printf("User: %s\n", toUser);
 		if(strcmp(toUser,"ERROR")){
@@ -62,7 +72,7 @@ void chat(int connfd)
 //  while((n = Rio_readlineb(&rio, buf, MAXLINE)) != 0) {
   //      printf("server received %d bytes\n", n);
    //     Rio_writen(connfd, buf, n);
-    //}
+  //  }//}
 }
 
 int main(int argc, char **argv) 
@@ -77,7 +87,7 @@ int main(int argc, char **argv)
 	exit(0);
     }
     listenfd = Open_listenfd(argv[1]);
-
+		for(int i=0; i<50; i++) strcpy(userArr[i], " ");
     while (1) {
       clientlen=sizeof(struct sockaddr_storage);
 			connfdp = Malloc(sizeof(int)); //line:conc:echoservert:beginmalloc
