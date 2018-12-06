@@ -8,7 +8,7 @@
 int maxClients = 50;
 int numClients = 0;
 char userArr[50][21];   //creates an array of 50 users with max username length of 20 character
-	 int ipArr[50];
+int ipArr[50];
 void *thread(void *vargp);
 
 char * parseUser(char * in){
@@ -26,13 +26,14 @@ char * parseUser(char * in){
 void chat(int connfd)
 {
 	int index = 0;
-  char buf[MAXLINE];
+  char buf[101];
 	char* toUser;
   rio_t rio;
+	for(int i = 0; i < 101; i++) buf[i] = ' ';
 	Rio_readinitb(&rio, connfd);
   Rio_readlineb(&rio, buf, 21);
-	printf("Init User: %s\n", buf);
-	fflush(stdout);
+	printf("Init User: %s \n", buf);
+//	fflush(stdout);
 	if(strlen(buf) != 0){
 	while((userArr[index] != NULL) && (strcmp(userArr[index], " ") != 0)){
 		index++;
@@ -40,8 +41,8 @@ void chat(int connfd)
 	strcpy(userArr[index], buf); 
 	ipArr[index] = connfd;
 	while(1){
-		Rio_readlineb(&rio, buf, MAXLINE);
-		printf("buf: %s\n", buf);
+		Rio_readlineb(&rio, buf, 101);
+//		printf("buf: %s\n", buf);
 		toUser = parseUser(buf);
 		printf("User: %s\n", toUser);
 		if(strcmp(toUser,"ERROR")){
