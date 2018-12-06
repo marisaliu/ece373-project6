@@ -59,9 +59,9 @@ int main(int argc, char **argv)
 				printf("error: message too long\n");
 			}
 			else{
-				printf("buf: %s\n", buf);
+//				printf("buf: %s\n", buf);
 				Rio_writen(clientfd, buf, 101);
-				if(strcmp(buf, "exit")){
+				if(strcmp(buf, "exit")==0){
 					quit = 1;
 					break;
 				}

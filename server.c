@@ -47,6 +47,7 @@ void chat(int connfd)
 	ipArr[index] = connfd;
 	while(1){
 		Rio_readlineb(&rio, buf, 101);
+		if(strlen(buf) > 1){
 		printf("buf: %s\n", buf);
 		userIndex = parseUser(buf);
 		printf("buf2: %s\n", buf);
@@ -56,7 +57,7 @@ void chat(int connfd)
 		}
 		else{
 			
-			strcpy(message, (buf));//+ strlen(userArr[index])));
+			strcpy(message, (buf+1+ strlen(userArr[userIndex])));
 			printf("message1: %s\n", message);
 			if(strcmp(message, "quit") == 0) break;
 			else if(strcmp(message, "list-users") == 0){
@@ -64,12 +65,13 @@ void chat(int connfd)
 					if(userArr[j] != NULL) rio_writen(connfd, userArr[j], strlen(userArr[j]));
 				}
 			}
-			message = strcat(userArr[userIndex], message);
+			message = strcat(userArr[index], message);
 			printf("message: %s\n", message);
 			rio_writen(ipArr[userIndex], message, strlen(message));
-		}
+		}}
 		}
 	}
+	printf("%s left \n", userArr[index]);
 	strcpy(userArr[index], " " );
 	ipArr[index] = 0;
 	numClients--;
