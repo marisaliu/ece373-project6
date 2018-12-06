@@ -49,28 +49,30 @@ void chat(int connfd)
 		Rio_readlineb(&rio, buf, 101);
 		if(strlen(buf) > 1){
 		printf("buf: %s\n", buf);
-		userIndex = parseUser(buf);
-		printf("buf2: %s\n", buf);
-		if(userIndex == 51){
-			strcpy(buf, "ERROR! NO USER OF THAT NAME!	Please enter a valid user");
-			rio_writen(connfd, buf, strlen(buf));
-		}
-		else{
-			
-			strcpy(message, (buf+1+ strlen(userArr[userIndex])));
-			printf("message1: %s\n", message);
-			if(strcmp(message, "quit") == 0) break;
-			else if(strcmp(message, "list-users") == 0){
+		if(strcmp(buf, "quit") == 0) break;
+		else if(strcmp(buf, "list-users") == 0){
 				for(int j = 0; j < 50; j++){
 					if(userArr[j] != NULL) rio_writen(connfd, userArr[j], strlen(userArr[j]));
 				}
 			}
-			message = strcat(userArr[index], message);
-			printf("message: %s\n", message);
-			rio_writen(ipArr[userIndex], message, strlen(message));
-		}}
+		else{
+			userIndex = parseUser(buf);
+			printf("buf2: %s\n", buf);
+			if(userIndex == 51){
+				strcpy(buf, "ERROR! NO USER OF THAT NAME!	Please enter a valid user");
+				rio_writen(connfd, buf, strlen(buf));
+			}
+			else{	
+				strcpy(message, (buf+1+ strlen(userArr[userIndex])));
+				printf("message1: %s\n", message);
+				message = strcat(userArr[index], message);
+				printf("message: %s\n", message);
+				rio_writen(ipArr[userIndex], message, strlen(message));
+			}
+		}
 		}
 	}
+}
 	printf("%s left \n", userArr[index]);
 	strcpy(userArr[index], " " );
 	ipArr[index] = 0;
