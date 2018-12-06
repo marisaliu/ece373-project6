@@ -21,7 +21,7 @@ int parseUser(char * in){
 			return 51;
 			break;
 		}
-		if(strcmp(out, userArr[i])) break;
+		if(strcmp(out, userArr[i]) == 0) return i;
 	}
 	return i;
 }
@@ -36,27 +36,28 @@ void chat(int connfd)
 	for(int i = 0; i < 101; i++) buf[i] = ' ';
 	Rio_readinitb(&rio, connfd);
   Rio_readlineb(&rio, buf, 21);
-//	printf("Init User: %s \n", buf);
 	printf("%s joined \n",buf);
-//	fflush(stdout);
 	if(strlen(buf) != 0){
 	while((userArr[index] != NULL) && (strcmp(userArr[index], " ") != 0)){
 		index++;
 	}
 	strcpy(userArr[index], buf); 
 	ipArr[index] = connfd;
+	for(int j = 0; j < 50; j++) printf("%s ", userArr[j]);
+//	char* bufHead = buf;
 	while(1){
+		
 		Rio_readlineb(&rio, buf, 101);
 		if(strlen(buf) > 1){
-		printf("buf: %s\n", buf);
-		if(strcmp(buf, "quit") == 0) break;
+		printf("buf: %s\n", bufHead + 1);
+		if(strcmp(buf +1, "quit") == 0) break;
 		else if(strcmp(buf, "list-users") == 0){
-				for(int j = 0; j < 50; j++){
-					if(userArr[j] != NULL) rio_writen(connfd, userArr[j], strlen(userArr[j]));
-				}
+			for(int j = 0; j < 50; j++){
+				if(userArr[j] != NULL) rio_writen(connfd, userArr[j], strlen(userArr[j]));
 			}
+		}
 		else{
-			userIndex = parseUser(buf);
+			userIndex = parseUser(buf + 1);
 			printf("buf2: %s\n", buf);
 			if(userIndex == 51){
 				strcpy(buf, "ERROR! NO USER OF THAT NAME!	Please enter a valid user");
