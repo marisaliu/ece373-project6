@@ -23,6 +23,7 @@ int main(int argc, char **argv)
 {
     int clientfd;
     char *host, *port;
+		char *name = (char *)malloc(strlen(argv[3])*sizeof(char));
 //    rio_t rio;
 		pthread_t tid;	
 		quit = 0;
@@ -38,11 +39,13 @@ int main(int argc, char **argv)
 		for(int i=0; i<101; i++) buf[i] = '\0';
 		host = argv[1];
     port = argv[2];
+		strcpy(name, "@");
 
     clientfd = Open_clientfd(host, port);
     Rio_readinitb(&rio, clientfd);
 		//send username to server
-		Rio_writen(clientfd, argv[3], 21);//strlen(argv[3]));
+		strcat(name, argv[3]);
+		Rio_writen(clientfd, name, 21);//strlen(argv[3]));
     //printf("sent\n");
 		if(pthread_create(&tid, NULL, thread, NULL) != 0){
 			printf("error\n");
