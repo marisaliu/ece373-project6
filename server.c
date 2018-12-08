@@ -61,13 +61,18 @@ int n = 0;
 		printf("buf11: %s\n", buf);
 		if(n>0){
 			if(strcmp(buf, "quit\n") == 0) break;
+			if(strcmp(buf, "list-users\n") == 0){
+				for(int j = 0; j < 50; j++){
+					if(userArr[j] != NULL) rio_writen(connfd, userArr[j], strlen(userArr[j]));
+				}
+			}
 		}
-		else{
+		else if (n==0){
 			if(strcmp(buf+1, "quit\n") == 0) break;
-		}
-		if(strcmp(buf, "list-users") == 0){
-			for(int j = 0; j < 50; j++){
-				if(userArr[j] != NULL) rio_writen(connfd, userArr[j], 101);
+			else if(strcmp(buf+1, "list-users\n") == 0){
+				for(int j = 0; j < 50; j++){
+					if(userArr[j] != NULL) rio_writen(connfd, userArr[j], strlen(userArr[j]));
+				}
 			}
 		}
 		else{
@@ -100,12 +105,10 @@ int n = 0;
 		}
 	}
 }
-
 	printf("%s left \n", userArr[index]);
   strcpy(userArr[index], " " );
 	ipArr[index] = 0;
 	numClients--;
-
 /*
   while((n = Rio_readlineb(&rio, buf, MAXLINE)) != 0) {
         printf("server received %d bytes\n", n);

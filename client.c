@@ -9,13 +9,13 @@ int quit;
 rio_t rio;
 
 void *thread(void *vargp){
-	/*int connfd = *((int *)vargp);
+	//int connfd = *((int *)vargp);
 	Pthread_detach(pthread_self());
-	Free(vargp);
-	Close(connfd);*/
+	//Free(vargp);
+	//Close(connfd);*/
 	while(!quit){
 		Rio_readlineb(&rio, buf2, 101);
-	if(strlen(buf2) > 1)	Fputs(buf2, stdout);
+		if((strlen(buf2) > 1))	Fputs(buf2, stdout);
 	}
 	return NULL;
 }
@@ -63,7 +63,7 @@ int main(int argc, char **argv)
 			else{
 //				printf("buf: %s\n", buf);
 				Rio_writen(clientfd, buf, strlen(buf));
-				if(strcmp(buf, "exit")==0){
+				if(strcmp(buf, "quit\n")==0){
 					quit = 1;
 					break;
 				}
