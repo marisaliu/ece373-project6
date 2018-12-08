@@ -4,6 +4,7 @@
 /* $begin echoclientmain */
 #include "csapp.h"
 char buf[101];
+char buf2[101];
 int quit;
 rio_t rio;
 
@@ -13,8 +14,8 @@ void *thread(void *vargp){
 	Free(vargp);
 	Close(connfd);*/
 	while(!quit){
-		Rio_readlineb(&rio, buf, 101);
-		Fputs(buf, stdout);
+		Rio_readlineb(&rio, buf2, 101);
+	if(strlen(buf2) > 1)	Fputs(buf2, stdout);
 	}
 	return NULL;
 }
@@ -36,7 +37,7 @@ int main(int argc, char **argv)
 			printf("username should not exceed 20 characters\n");
 			exit(0);
 		}
-		for(int i=0; i<101; i++) buf[i] = '\0';
+//		for(int i=0; i<101; i++) buf[i] = '\0';
 		host = argv[1];
     port = argv[2];
 		strcpy(name, "@");
@@ -55,12 +56,13 @@ int main(int argc, char **argv)
 		while (!quit) {
 			printf("> ");
 			Fgets(buf, 101, stdin);
+//			printf("buf: %s\n",buf);
 			if(strlen(buf) > 100){
 				printf("error: message too long\n");
 			}
 			else{
-//				printf("buf: %s\n", buf);
-				Rio_writen(clientfd, buf, 101);
+				printf("buf: %s\n", buf);
+				Rio_writen(clientfd, buf, strlen(buf));
 				if(strcmp(buf, "exit")==0){
 					quit = 1;
 					break;
