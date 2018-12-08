@@ -12,6 +12,6 @@ Summary/Solution Approach:
     
 
 Errors we encountered:
-  The first time the client sends something it sends an additional junk character at the beginning. To solve this issue, we only parsed the string starting at the second character the first time the client sends a message.
+  The first time the client sends a message to the server it sends an additional junk character at the beginning. To solve this issue, for the first received message we parse the string starting at the second character.
     
 
