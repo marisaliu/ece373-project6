@@ -14,5 +14,11 @@ Summary/Solution Approach:
 Errors we encountered:
   The first time the client sends a message to the server it sends an additional junk character at the beginning. To solve this issue, for the first received message we parse the string starting at the second character.
   Encountered a buffer overflow in server if we sent too long of a message
+  
+  
+  Errors we have to fix
+    buffer overflow when message is too long
+    error message sending/receiving is delayed or not sent
+    list-users on the first input
     
 
