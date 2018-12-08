@@ -65,6 +65,7 @@ int n = 0;
 				for(int j = 0; j < 50; j++){
 					if(userArr[j] != NULL) rio_writen(connfd, userArr[j], strlen(userArr[j]));
 				}
+				continue;
 			}
 		}
 		else if (n==0){
@@ -73,9 +74,10 @@ int n = 0;
 				for(int j = 0; j < 50; j++){
 					if(userArr[j] != NULL) rio_writen(connfd, userArr[j], strlen(userArr[j]));
 				}
+				continue;
 			}
 		}
-		else{
+	//	else{
 		  if(n == 0){
 				userIndex = parseUser(buf+1);
 				n++;
@@ -101,7 +103,7 @@ int n = 0;
 				rio_writen(ipArr[userIndex], temp, strlen(temp));
 				printf("AFTER SEND: %s\n", temp);
 			}
-		}
+		//}
 		}
 	}
 }
