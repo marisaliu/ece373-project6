@@ -59,8 +59,13 @@ int n = 0;
 		printf("read: %s\n", buf);
 		if(strlen(buf) > 1){
 		printf("buf11: %s\n", buf);
-		if(strcmp(buf +1, "quit") == 0) break;
-		else if(strcmp(buf, "list-users") == 0){
+		if(n>0){
+			if(strcmp(buf, "quit\n") == 0) break;
+		}
+		else{
+			if(strcmp(buf+1, "quit\n") == 0) break;
+		}
+		if(strcmp(buf, "list-users") == 0){
 			for(int j = 0; j < 50; j++){
 				if(userArr[j] != NULL) rio_writen(connfd, userArr[j], 101);
 			}
@@ -74,7 +79,7 @@ int n = 0;
  	printf("userIndex: %d\n", userIndex);
  // 	printf("buf2: %s\n", buf);
 			if(userIndex == 51){
-				printf("NO USER OF THAT NAME");
+				printf("NO USER OF THAT NAME\n");
 			strcpy(buf, "ERROR! NO USER OF THAT NAME!	Please enter a valid user");
 				rio_writen(connfd, buf, 101);
 			}
