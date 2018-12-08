@@ -32,7 +32,8 @@ void chat(int connfd)
 {
 int n = 0;
 	int index = 0;
-  char buf[101];
+  char buf[MAXLINE];
+	char temp[MAXLINE];
 	char name[21];
 	char *message = (char *)malloc(101*sizeof(char));
 	int userIndex;
@@ -47,14 +48,8 @@ int n = 0;
 	}
 	strcpy(userArr[index], name); 
 	ipArr[index] = connfd;
-//	printf("userArr now: %s\n", userArr[index]);
-//	for(int j = 0; j < 50; j++) printf("user%s\n", userArr[j]);
-//	char* bufHead = buf;
 	while(1){
-		memset(buf, 0, sizeof(buf));		
-	//	strcpy(buf, "PLease work");
-//		printf("before read %s\n", buf);
-//		Rio_writen(ipArr[index], buf, 101);
+		memset(buf, 0, sizeof(buf));	
 		Rio_readlineb(&rio, buf, 101);
 		printf("read: %s\n", buf);
 		if(strlen(buf) > 1){
@@ -63,7 +58,12 @@ int n = 0;
 			if(strcmp(buf, "quit\n") == 0) break;
 			if(strcmp(buf, "list-users\n") == 0){
 				for(int j = 0; j < 50; j++){
-					if(userArr[j] != NULL) rio_writen(connfd, userArr[j], strlen(userArr[j]));
+					if(strcmp(userArr[j], " ") != 0){
+						strcpy(temp, userArr[j]);
+						strcat(temp, "\n");
+						rio_writen(connfd, temp, strlen(temp));
+					//	rio_writen(connfd, "\n", strlen("\n"));
+						}
 				}
 				continue;
 			}
@@ -88,18 +88,18 @@ int n = 0;
 			if(userIndex == 51){
 				printf("NO USER OF THAT NAME\n");
 			strcpy(buf, "ERROR! NO USER OF THAT NAME!	Please enter a valid user");
-				rio_writen(connfd, buf, 101);
+				rio_writen(connfd, buf, strlen(buf));
 			}
 					else{
-			//	printf("userIndex: %d\n", userIndex);
+				printf("userIndex: %d\n", userIndex);
 				strcpy(message, (buf+1+ strlen(userArr[userIndex])));
 				printf("message1: %s\n", message);
-				char temp[101];
+//				char temp[MAXLINE];
 				strcpy(temp, userArr[index]);
 				if(n==1) n++;
 				else strcat(temp, " ");
 				strcat(temp, message);
-			//	printf("message: %s\n", message);
+				printf("message: %s\n", message);
 				rio_writen(ipArr[userIndex], temp, strlen(temp));
 				printf("AFTER SEND: %s\n", temp);
 			}
@@ -111,12 +111,7 @@ int n = 0;
   strcpy(userArr[index], " " );
 	ipArr[index] = 0;
 	numClients--;
-/*
-  while((n = Rio_readlineb(&rio, buf, MAXLINE)) != 0) {
-        printf("server received %d bytes\n", n);
-	printf("buf: %s\n", buf);
- Rio_writen(connfd, buf, n);
-    }//}*/
+
 }
 
 int main(int argc, char **argv) 
