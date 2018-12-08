@@ -54,7 +54,7 @@ int main(int argc, char **argv)
 		//take input
 		while (!quit) {
 			printf("> ");
-			Fgets(buf, MAXLINE, stdin);
+			Fgets(buf, 101, stdin);
 			if(strlen(buf) > 100){
 				printf("error: message too long\n");
 			}
@@ -72,6 +72,7 @@ int main(int argc, char **argv)
 		//	}
 		//	Fputs(buf, stdout);
     }
+		quit =1;
 		printf("GoodBye!\n");
     Close(clientfd); //line:netp:echoclient:close
     exit(0);
