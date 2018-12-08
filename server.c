@@ -30,7 +30,7 @@ int parseUser(char * in){
 
 void chat(int connfd)
 {
-int n;
+int n = 0;
 	int index = 0;
   char buf[101];
 	char name[21];
@@ -52,13 +52,13 @@ int n;
 //	char* bufHead = buf;
 	while(1){
 		memset(buf, 0, sizeof(buf));		
-		strcpy(buf, "PLease work");
-		printf("before read %s\n", buf);
-		Rio_writen(ipArr[index], buf, 101);
+	//	strcpy(buf, "PLease work");
+//		printf("before read %s\n", buf);
+//		Rio_writen(ipArr[index], buf, 101);
 		Rio_readlineb(&rio, buf, 101);
 		printf("read: %s\n", buf);
 		if(strlen(buf) > 1){
-		printf("buf11: %s\n", buf + 1);
+		printf("buf11: %s\n", buf);
 		if(strcmp(buf +1, "quit") == 0) break;
 		else if(strcmp(buf, "list-users") == 0){
 			for(int j = 0; j < 50; j++){
@@ -66,7 +66,11 @@ int n;
 			}
 		}
 		else{
-			userIndex = parseUser(buf + 1);
+		  if(n == 0){
+				userIndex = parseUser(buf+1);
+				n++;
+				}
+			else userIndex = parseUser(buf);
  	printf("userIndex: %d\n", userIndex);
  // 	printf("buf2: %s\n", buf);
 			if(userIndex == 51){
@@ -78,19 +82,22 @@ int n;
 			//	printf("userIndex: %d\n", userIndex);
 				strcpy(message, (buf+1+ strlen(userArr[userIndex])));
 				printf("message1: %s\n", message);
-				char temp[21];
+				char temp[101];
 				strcpy(temp, userArr[index]);
-				message = strcat(temp, message);
+				if(n==1) n++;
+				else strcat(temp, " ");
+				strcat(temp, message);
 			//	printf("message: %s\n", message);
-				rio_writen(ipArr[userIndex], message, 101);
-				printf("AFTER SEND: %s\n", message);
+				rio_writen(ipArr[userIndex], temp, strlen(temp));
+				printf("AFTER SEND: %s\n", temp);
 			}
 		}
 		}
 	}
 }
+
 	printf("%s left \n", userArr[index]);
-	strcpy(userArr[index], " " );
+  strcpy(userArr[index], " " );
 	ipArr[index] = 0;
 	numClients--;
 
