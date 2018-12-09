@@ -1,0 +1,6 @@
+Dylan Banh - Functions Implemented
+  -created and coded client
+  -debugged server
+Marisa Liu - Function Implemented 
+   -created and coded server
+   -debugged client
