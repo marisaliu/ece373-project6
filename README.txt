@@ -13,12 +13,9 @@ Summary/Solution Approach:
 
 Errors we encountered:
   The first time the client sends a message to the server it sends an additional junk character at the beginning. To solve this issue, for the first received message we parse the string starting at the second character.
-  Encountered a buffer overflow in server if we sent too long of a message
+  Encountered a buffer overflow in server if we sent too long of a message. This error was fixed once we realized that we were malloc-ing only enough for the username portion and forgot to change that to include the entire message being sent.
   
-  
-  Errors we have to fix
-    buffer overflow when message is too long
-    error message sending/receiving is delayed or not sent
-    list-users on the first input
+
+Note: we coded a limit of 100 characters per message and only allow 50 users to join a single chat room.  
     
 
