@@ -62,7 +62,6 @@ int n = 0;
 						strcpy(temp, userArr[j]);
 						strcat(temp, "\n");
 						rio_writen(connfd, temp, strlen(temp));
-					//	rio_writen(connfd, "\n", strlen("\n"));
 						}
 				}
 				continue;
@@ -72,13 +71,16 @@ int n = 0;
 			if(strcmp(buf+1, "quit\n") == 0) break;
 			else if(strcmp(buf+1, "list-users\n") == 0){
 				for(int j = 0; j < 50; j++){
-					if(userArr[j] != NULL) rio_writen(connfd, userArr[j], strlen(userArr[j]));
+						if(strcmp(userArr[j], " ") != 0){
+						strcpy(temp, userArr[j]);
+						strcat(temp, "\n");
+						rio_writen(connfd, temp, strlen(temp));}
 				}
 				continue;
 			}
 		}
-	//	else{
 		  if(n == 0){
+				printf("N = 0\n");
 				userIndex = parseUser(buf+1);
 				n++;
 				}
@@ -86,9 +88,10 @@ int n = 0;
  	printf("userIndex: %d\n", userIndex);
  // 	printf("buf2: %s\n", buf);
 			if(userIndex == 51){
-				printf("NO USER OF THAT NAME\n");
-			strcpy(buf, "ERROR! NO USER OF THAT NAME!	Please enter a valid user");
-				rio_writen(connfd, buf, strlen(buf));
+			continue;
+		//		printf("NO USER OF THAT NAME\n");
+//			strcpy(buf, "ERROR! NO USER OF THAT NAME!	Please enter a valid user");
+	//			rio_writen(connfd, buf, strlen(buf));
 			}
 					else{
 				printf("userIndex: %d\n", userIndex);
