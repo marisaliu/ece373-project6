@@ -51,7 +51,7 @@ int main(int argc, char **argv)
 		while (!quit) {
 			printf("> ");
 			Fgets(buf, 101, stdin);
-			if(strlen(buf) > 100){
+			if(strlen(buf) > 99){
 				printf("error: message too long\n");
 			}
 			else{
