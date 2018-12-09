@@ -12,17 +12,15 @@ int ipArr[50];
 void *thread(void *vargp);
 
 int parseUser(char * in){
-  char *newin = (char *)malloc(21*sizeof(char));;
+  char *newin = (char *)malloc(101*sizeof(char));;
 	strcpy(newin, in);
 	char *out = strtok(newin," ");
-//	printf("out: %s\n", out);
 	int i;
 	for(i = 0; i<51; i++){
 		if(i == 50){
 			return 51;
 			break;
 		}
-//		printf("userArr: %d, %s\n", i, userArr[i]);
 		if(strcmp(out, userArr[i]) == 0) return i;
 	}
 	return i;
@@ -51,9 +49,7 @@ int n = 0;
 	while(1){
 		memset(buf, 0, sizeof(buf));	
 		Rio_readlineb(&rio, buf, 101);
-		printf("read: %s\n", buf);
 		if(strlen(buf) > 1){
-		printf("buf11: %s\n", buf);
 		if(n>0){
 			if(strcmp(buf, "quit\n") == 0) break;
 			if(strcmp(buf, "list-users\n") == 0){
@@ -70,6 +66,7 @@ int n = 0;
 		else if (n==0){
 			if(strcmp(buf+1, "quit\n") == 0) break;
 			else if(strcmp(buf+1, "list-users\n") == 0){
+				n++;
 				for(int j = 0; j < 50; j++){
 						if(strcmp(userArr[j], " ") != 0){
 						strcpy(temp, userArr[j]);
@@ -80,33 +77,21 @@ int n = 0;
 			}
 		}
 		  if(n == 0){
-				printf("N = 0\n");
 				userIndex = parseUser(buf+1);
 				n++;
 				}
 			else userIndex = parseUser(buf);
- 	printf("userIndex: %d\n", userIndex);
- // 	printf("buf2: %s\n", buf);
 			if(userIndex == 51){
 			continue;
-		//		printf("NO USER OF THAT NAME\n");
-//			strcpy(buf, "ERROR! NO USER OF THAT NAME!	Please enter a valid user");
-	//			rio_writen(connfd, buf, strlen(buf));
 			}
 					else{
-				printf("userIndex: %d\n", userIndex);
 				strcpy(message, (buf+1+ strlen(userArr[userIndex])));
-				printf("message1: %s\n", message);
-//				char temp[MAXLINE];
 				strcpy(temp, userArr[index]);
 				if(n==1) n++;
 				else strcat(temp, " ");
 				strcat(temp, message);
-				printf("message: %s\n", message);
 				rio_writen(ipArr[userIndex], temp, strlen(temp));
-				printf("AFTER SEND: %s\n", temp);
 			}
-		//}
 		}
 	}
 }
