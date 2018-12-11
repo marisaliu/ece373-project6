@@ -15,18 +15,16 @@ sem_t mutex;
 void *thread(void *vargp);
 
 int parseUser(char * in){
-  char *newin = (char *)malloc(101*sizeof(char));;
-	strcpy(newin, in);
+char *newin = (char *)malloc(101*sizeof(char));;
+strcpy(newin, in);
 	char *out = strtok(newin," ");
 	int i;
-	for(i = 0; i<51; i++){
+for(i = 0; i<51; i++){
 		if(i == 50){
 			return 51;
 			break;
 		}
-		P(&mutex);
 		if(strcmp(out, userArr[i]) == 0) return i;
-		V(&mutex);
 	}
 	return i;
 }
@@ -48,7 +46,6 @@ int n = 0;
 	printf("%s joined \n",name);
 	if(strlen(buf) != 0){
 		P(&mutex);	
-	printf("1st\n");
 	while((userArr[index] != NULL) && (strcmp(userArr[index], " ") != 0)){
 		index++;
 	}
@@ -64,7 +61,6 @@ int n = 0;
 			if(strcmp(buf, "list-users\n") == 0){
 				P(&mutex);
 				for(int j = 0; j < 50; j++){
-					printf("2nd\n");
 					if(strcmp(userArr[j], " ") != 0){
 						strcpy(temp, userArr[j]);
 						strcat(temp, "\n");
@@ -81,7 +77,6 @@ int n = 0;
 				n++;
 				P(&mutex);
 				for(int j = 0; j < 50; j++){	
-					printf("3rd\n");
 					if(strcmp(userArr[j], " ") != 0){
 						strcpy(temp, userArr[j]);
 						strcat(temp, "\n");
@@ -91,34 +86,28 @@ int n = 0;
 				V(&mutex);
 				continue;
 			}
-		}
+		}P(&mutex);
 		  if(n == 0){
 				userIndex = parseUser(buf+1);
 				n++;
 				}
 			else userIndex = parseUser(buf);
+			V(&mutex);
 			if(userIndex == 51){
 			continue;
 			}
 					else{
-				P(&mutex);
-				printf("4th\n");
 				strcpy(message, (buf+1+ strlen(userArr[userIndex])));
 				strcpy(temp, userArr[index]);
-				V(&mutex);
 				if(n==1) n++;
 				else strcat(temp, " ");
 				strcat(temp, message);
-				P(&mutex);
-				printf("5th\n");
 				rio_writen(ipArr[userIndex], temp, strlen(temp));
-				V(&mutex);
 			}
 		}
 	}
 }
 	P(&mutex);
-	printf("6th\n");
 	printf("%s left \n", userArr[index]);
   strcpy(userArr[index], " " );
 	ipArr[index] = 0;
