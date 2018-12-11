@@ -1,0 +1,6 @@
+Dylan Banh:
+  -created and coded client
+  -debugged server
+Marisa Liu:
+   -created and coded server
+   -debugged client
